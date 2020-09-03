@@ -29,15 +29,15 @@ import axios from 'axios'
 */
 const cardsSelector = document.querySelector('.cards')  //element where all cards will be appended
 
-// axios.get('https://api.github.com/users/mattcanavan')
-// .then(stuff => {
-//   let newCard = cardMaker(stuff.data);
-//   cardsSelector.appendChild(newCard);
+axios.get('https://api.github.com/users/mattcanavan')
+.then(stuff => {
+  let newCard = cardMaker(stuff.data);
+  cardsSelector.appendChild(newCard);
 
-// })
-// .catch(err =>{
-//   debugger
-// })
+})
+.catch(err =>{
+  debugger
+})
 
 
 /*
@@ -51,16 +51,19 @@ const cardsSelector = document.querySelector('.cards')  //element where all card
     user, and adding that card to the DOM.
 */
 
-axios.get('https://api.github.com/users/mattcanavan/followers')       //grab all my followers
+axios.get('https://api.github.com/users/mattcanavan/followers') //grab all my followers
 .then(stuff => {
 
-  let followerProfiles = stuff.data;
+  const followerProfiles = stuff.data;  //Array of Objs of all my followers
 
-  followerProfiles.forEach(follower =>{                               //forEach follower, load their profile to make a card
-    // console.log(`this is follower`, `'https://api.github.com/users/${follower.login}'`)
-    axios.get(`'https://api.github.com/users/${follower.login}'`)
+  followerProfiles.forEach(follower =>{ //forEach follower, we're gonna do some work below
+    
+    axios.get(`https://api.github.com/users/${follower.login}`) //get profile of follower
     .then(moreStuff =>{
-      console.log(moreStuff)
+      
+      // console.log()
+      console.log(moreStuff)  // not the data i expected???
+
       let followerCard = cardMaker(moreStuff.data)
       cardsSelector.appendChild(followerCard);
 
