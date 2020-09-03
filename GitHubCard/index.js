@@ -6,13 +6,13 @@ import axios from 'axios'
     https://api.github.com/users/<your name>
 */
 
-axios.get('https://api.github.com/users/mattcanavan')
-.then(stuff => {
-
-})
-.catch(err =>{
-  debugger
-})
+// axios.get('https://api.github.com/users/mattcanavan')
+// .then(stuff => {
+//   console.log(stuff)
+// })
+// .catch(err =>{
+//   debugger
+// })
 
 
 /*
@@ -60,6 +60,49 @@ const followersArray = [];
       </div>
     </div>
 */
+
+function CardMaker(githubObj){
+  
+  //Creating all the elements
+  const divContainer = document.createElement('div'),   
+        avatarImg = document.createElement('img'),
+        cardInfoDiv = document.createElement('div'),
+        userNameName = document.createElement('h3'),
+        userNameLogin = document.createElement('p'),
+        userLocation = document.createElement('p'),
+        userProfile = document.createElement('p'),
+        userProfileLink = document.createElement('a'),
+        userFollowers = document.createElement('p'),
+        userFollowing = document.createElement('p'),
+        userBio = document.createElement('p');
+
+  //Adding class names
+  divContainer.classList.add('card');
+  cardInfoDiv.classList.add('card-info');
+  userNameName.classList.add('name');
+  userNameLogin.classList.add('username');
+
+  //Nesting elements to match provided markup
+  divContainer.appendChild(avatarImg);
+  divContainer.appendChild(cardInfoDiv);
+
+  cardInfoDiv.appendChild(userNameName);
+  cardInfoDiv.appendChild(userNameLogin);
+  cardInfoDiv.appendChild(userLocation);
+  cardInfoDiv.appendChild(userProfile);
+  cardInfoDiv.appendChild(userFollowers);
+  cardInfoDiv.appendChild(userFollowing);
+  cardInfoDiv.appendChild(userBio);
+
+  userProfile.appendChild(userProfileLink);
+
+  //forEach object, assign data in the following way
+
+
+
+
+}
+
 
 /*
   List of LS Instructors Github username's:
