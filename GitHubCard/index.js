@@ -27,6 +27,19 @@ import axios from 'axios'
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
+const cardsSelector = document.querySelector('.cards')  //element where all cards will be appended
+
+axios.get('https://api.github.com/users/mattcanavan')
+.then(stuff => {
+  let newCard = cardMaker(stuff);
+  cardsSelector.appendChild(newCard);
+
+  return stuff;
+})
+.catch(err =>{
+  debugger
+})
+
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -61,7 +74,7 @@ const followersArray = [];
     </div>
 */
 
-function CardMaker(githubObj){
+function cardMaker(githubObj){
   
   //Creating all the elements
   const divContainer = document.createElement('div'),   
@@ -96,11 +109,18 @@ function CardMaker(githubObj){
 
   userProfile.appendChild(userProfileLink);
 
-  //forEach object, assign data in the following way
+  //Assigning Obj data to elements
+  avatarImg.src = githubObj.avatar_url;
+  userNameName.textContent = githubObj.name;
+  userNameLogin.textContent = githubObj.login;
+  userLocation.textContent = githubObj.location;
+  userProfileLink.href = githubObj.html_url;
+  userProfileLink.textContent = githubObj.html_url; //need the href and text for this link to work
+  userFollowers.textContent = githubObj.followers;
+  userFollowing.textContent = githubObj.following;
+  userBio.textContent = githubObj.bio;
 
-
-
-
+  return divContainer;
 }
 
 
@@ -112,3 +132,40 @@ function CardMaker(githubObj){
     luishrd
     bigknell
 */
+
+
+
+const tempData = {
+  "login": "mattcanavan",
+  "id": 24658567,
+  "node_id": "MDQ6VXNlcjI0NjU4NTY3",
+  "avatar_url": "https://avatars2.githubusercontent.com/u/24658567?v=4",
+  "gravatar_id": "",
+  "url": "https://api.github.com/users/mattcanavan",
+  "html_url": "https://github.com/mattcanavan",
+  "followers_url": "https://api.github.com/users/mattcanavan/followers",
+  "following_url": "https://api.github.com/users/mattcanavan/following{/other_user}",
+  "gists_url": "https://api.github.com/users/mattcanavan/gists{/gist_id}",
+  "starred_url": "https://api.github.com/users/mattcanavan/starred{/owner}{/repo}",
+  "subscriptions_url": "https://api.github.com/users/mattcanavan/subscriptions",
+  "organizations_url": "https://api.github.com/users/mattcanavan/orgs",
+  "repos_url": "https://api.github.com/users/mattcanavan/repos",
+  "events_url": "https://api.github.com/users/mattcanavan/events{/privacy}",
+  "received_events_url": "https://api.github.com/users/mattcanavan/received_events",
+  "type": "User",
+  "site_admin": false,
+  "name": "Matt",
+  "company": null,
+  "blog": "",
+  "location": null,
+  "email": null,
+  "hireable": null,
+  "bio": "hello@mattpy.com",
+  "twitter_username": null,
+  "public_repos": 18,
+  "public_gists": 0,
+  "followers": 2,
+  "following": 1,
+  "created_at": "2016-12-19T19:10:00Z",
+  "updated_at": "2020-09-03T18:40:32Z"
+};
