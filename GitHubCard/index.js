@@ -1,8 +1,19 @@
+import axios from 'axios'
+
 /*
   STEP 1: using axios, send a GET request to the following URL
     (replacing the placeholder with your Github name):
     https://api.github.com/users/<your name>
 */
+
+// axios.get('https://api.github.com/users/mattcanavan')
+// .then(stuff => {
+//   console.log(stuff)
+// })
+// .catch(err =>{
+//   debugger
+// })
+
 
 /*
   STEP 2: Inspect and study the data coming back, this is YOUR
@@ -16,6 +27,18 @@
   STEP 4: Pass the data received from Github into your function,
     and append the returned markup to the DOM as a child of .cards
 */
+const cardsSelector = document.querySelector('.cards')  //element where all cards will be appended
+
+axios.get('https://api.github.com/users/mattcanavan')
+.then(stuff => {
+  let newCard = cardMaker(stuff.data);
+  cardsSelector.appendChild(newCard);
+
+})
+.catch(err =>{
+  debugger
+})
+
 
 /*
   STEP 5: Now that you have your own card getting added to the DOM, either
@@ -28,7 +51,33 @@
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+axios.get('https://api.github.com/users/mattcanavan/followers') //grab all my followers
+.then(stuff => {
+
+  const followerProfiles = stuff.data;  //Array of Objs of all my followers
+
+  followerProfiles.forEach(follower =>{ //forEach follower, we're gonna do some work below
+    
+    axios.get(`https://api.github.com/users/${follower.login}`) //get profile of follower
+    .then(moreStuff =>{
+      
+      // console.log()
+      console.log(moreStuff)  // not the data i expected???
+
+      let followerCard = cardMaker(moreStuff.data)
+      cardsSelector.appendChild(followerCard);
+
+    })
+
+    .catch(err => {
+      debugger
+    })
+  })
+
+})
+.catch(err =>{
+  debugger
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -50,6 +99,56 @@ const followersArray = [];
     </div>
 */
 
+function cardMaker(githubObj){
+  
+  //Creating all the elements
+  const divContainer = document.createElement('div'),   
+        avatarImg = document.createElement('img'),
+        cardInfoDiv = document.createElement('div'),
+        userNameName = document.createElement('h3'),
+        userNameLogin = document.createElement('p'),
+        userLocation = document.createElement('p'),
+        userProfile = document.createElement('p'),
+        userProfileLink = document.createElement('a'),
+        userFollowers = document.createElement('p'),
+        userFollowing = document.createElement('p'),
+        userBio = document.createElement('p');
+
+  //Adding class names
+  divContainer.classList.add('card');
+  cardInfoDiv.classList.add('card-info');
+  userNameName.classList.add('name');
+  userNameLogin.classList.add('username');
+
+  //Nesting elements to match provided markup
+  divContainer.appendChild(avatarImg);
+  divContainer.appendChild(cardInfoDiv);
+
+  cardInfoDiv.appendChild(userNameName);
+  cardInfoDiv.appendChild(userNameLogin);
+  cardInfoDiv.appendChild(userLocation);
+  cardInfoDiv.appendChild(userProfile);
+  cardInfoDiv.appendChild(userFollowers);
+  cardInfoDiv.appendChild(userFollowing);
+  cardInfoDiv.appendChild(userBio);
+
+  userProfile.appendChild(userProfileLink);
+
+  //Assigning Obj data to elements
+  avatarImg.src = githubObj.avatar_url;
+  userNameName.textContent = githubObj.name;
+  userNameLogin.textContent = githubObj.login;
+  userLocation.textContent = githubObj.location;
+  userProfileLink.href = githubObj.html_url;
+  userProfileLink.textContent = githubObj.html_url; //need the href and text for this link to work
+  userFollowers.textContent = `Followers: ${githubObj.followers}`;
+  userFollowing.textContent = `Following: ${githubObj.following}`;
+  userBio.textContent = `Bio: ${githubObj.bio}`;
+
+  return divContainer;
+}
+
+
 /*
   List of LS Instructors Github username's:
     tetondan
@@ -58,3 +157,40 @@ const followersArray = [];
     luishrd
     bigknell
 */
+
+
+
+const tempData = {
+  "login": "mattcanavan",
+  "id": 24658567,
+  "node_id": "MDQ6VXNlcjI0NjU4NTY3",
+  "avatar_url": "https://avatars2.githubusercontent.com/u/24658567?v=4",
+  "gravatar_id": "",
+  "url": "https://api.github.com/users/mattcanavan",
+  "html_url": "https://github.com/mattcanavan",
+  "followers_url": "https://api.github.com/users/mattcanavan/followers",
+  "following_url": "https://api.github.com/users/mattcanavan/following{/other_user}",
+  "gists_url": "https://api.github.com/users/mattcanavan/gists{/gist_id}",
+  "starred_url": "https://api.github.com/users/mattcanavan/starred{/owner}{/repo}",
+  "subscriptions_url": "https://api.github.com/users/mattcanavan/subscriptions",
+  "organizations_url": "https://api.github.com/users/mattcanavan/orgs",
+  "repos_url": "https://api.github.com/users/mattcanavan/repos",
+  "events_url": "https://api.github.com/users/mattcanavan/events{/privacy}",
+  "received_events_url": "https://api.github.com/users/mattcanavan/received_events",
+  "type": "User",
+  "site_admin": false,
+  "name": "Matt",
+  "company": null,
+  "blog": "",
+  "location": null,
+  "email": null,
+  "hireable": null,
+  "bio": "hello@mattpy.com",
+  "twitter_username": null,
+  "public_repos": 18,
+  "public_gists": 0,
+  "followers": 2,
+  "following": 1,
+  "created_at": "2016-12-19T19:10:00Z",
+  "updated_at": "2020-09-03T18:40:32Z"
+};
