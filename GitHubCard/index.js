@@ -29,16 +29,15 @@ import axios from 'axios'
 */
 const cardsSelector = document.querySelector('.cards')  //element where all cards will be appended
 
-axios.get('https://api.github.com/users/mattcanavan')
-.then(stuff => {
-  let newCard = cardMaker(stuff);
-  cardsSelector.appendChild(newCard);
+// axios.get('https://api.github.com/users/mattcanavan')
+// .then(stuff => {
+//   let newCard = cardMaker(stuff.data);
+//   cardsSelector.appendChild(newCard);
 
-  return stuff;
-})
-.catch(err =>{
-  debugger
-})
+// })
+// .catch(err =>{
+//   debugger
+// })
 
 
 /*
@@ -52,7 +51,30 @@ axios.get('https://api.github.com/users/mattcanavan')
     user, and adding that card to the DOM.
 */
 
-const followersArray = [];
+axios.get('https://api.github.com/users/mattcanavan/followers')       //grab all my followers
+.then(stuff => {
+
+  let followerProfiles = stuff.data;
+
+  followerProfiles.forEach(follower =>{                               //forEach follower, load their profile to make a card
+    // console.log(`this is follower`, `'https://api.github.com/users/${follower.login}'`)
+    axios.get(`'https://api.github.com/users/${follower.login}'`)
+    .then(moreStuff =>{
+      console.log(moreStuff)
+      let followerCard = cardMaker(moreStuff.data)
+      cardsSelector.appendChild(followerCard);
+
+    })
+
+    .catch(err => {
+      debugger
+    })
+  })
+
+})
+.catch(err =>{
+  debugger
+})
 
 /*
   STEP 3: Create a function that accepts a single object as its only argument.
@@ -116,9 +138,9 @@ function cardMaker(githubObj){
   userLocation.textContent = githubObj.location;
   userProfileLink.href = githubObj.html_url;
   userProfileLink.textContent = githubObj.html_url; //need the href and text for this link to work
-  userFollowers.textContent = githubObj.followers;
-  userFollowing.textContent = githubObj.following;
-  userBio.textContent = githubObj.bio;
+  userFollowers.textContent = `Followers: ${githubObj.followers}`;
+  userFollowing.textContent = `Following: ${githubObj.following}`;
+  userBio.textContent = `Bio: ${githubObj.bio}`;
 
   return divContainer;
 }
